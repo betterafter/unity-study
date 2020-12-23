@@ -18,10 +18,8 @@ public class step : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Block"))
         {
-            Debug.Log("!!!!!!!!!!!!");
             GameObject block = collision.gameObject;
             block GetBlock = block.GetComponent<block>();
-            Debug.Log(GetBlock.posx + ", " + GetBlock.posy + ", " + posx + ", " + posy);
             if(GetBlock.posx == posx && GetBlock.posy == posy)
                 this.gameObject.GetComponent<SpriteRenderer>().sprite = steps[1];
         }
