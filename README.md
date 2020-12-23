@@ -1,6 +1,6 @@
 # unity-study
 
-study 1 (2020.12.23)
+## study 1 (2020.12.23)
 
 1. OnTrigger 함수를 이용한 충돌 판정 처리
 2. Resources.Load를 이용한 sprite 동적 변경
