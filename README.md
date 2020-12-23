@@ -7,3 +7,6 @@
 3. Input.GetKey를 이용한 입력키 값에 따른 동작 처리
 
 예시 영상 : https://drive.google.com/file/d/1IdxWXp1RB3dD4Dv9Vea1RKtTwdj0ITMd/view?usp=sharing
+
+
+## study 2
