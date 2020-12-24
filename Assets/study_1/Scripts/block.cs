@@ -5,17 +5,17 @@ using UnityEngine;
 public class block : MonoBehaviour
 {
 
-    public int posx = 0, posy = -2;
+    public int posx, posy;
 
     public block(int x, int y)
     {
         posx = x; posy = y;
     }
 
-    public void init()
+    public void init(int x, int y)
     {
         // 처음 위치 설정
-        posx = 0; posy = -2;
+        posx = x; posy = y;
         this.gameObject.transform.position = new Vector3(posx, posy, 0);
     }
 
@@ -24,4 +24,7 @@ public class block : MonoBehaviour
         posx += x; posy += y;
         this.gameObject.transform.position = new Vector3(posx, posy, 0);
     }
+
 }
+
+

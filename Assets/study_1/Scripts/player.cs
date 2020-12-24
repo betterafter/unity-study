@@ -11,13 +11,17 @@ public class player : MonoBehaviour
     public GameObject[] collideBlock = new GameObject[4];
 
     public int posx, posy;
-
+    public bool[] isMove = new bool[4];
+    public Vector3 targetPosition;
 
     public void init()
     {
         // 처음 위치 설정
         posx = 0; posy = 0;
+        targetPosition = new Vector3(posx, posy);
         this.gameObject.transform.position = new Vector3(posx, posy, 0);
+        targetPosition = this.gameObject.transform.position;
+        for (int i = 0; i < 4; i++) isMove[i] = false;
 
         // Resources.Load : Resources 라는 폴더 안의 데이터를 가져올 때 사용. Resources 폴더는 유니티에서 지정한 특수한 폴더 이름이며, 사용자가 폴더를 직접 만들어서 사용하면 된다.
         // 불러올 자료의 경로는 Resources 하위 폴더부터 경로를 설정하며, 확장자는 붙이면 안된다.
@@ -34,6 +38,7 @@ public class player : MonoBehaviour
        
     }
 
+    // 캐릭터와 블록 같이 움직이기 - Lerp를 이용한 부드럽게 움직이기 기능을 적용하지 않을 때
     public void move(string direction)
     {
         // 보고 있는 방향이 다르면 sprite를 각각 다르게 설정
@@ -69,12 +74,60 @@ public class player : MonoBehaviour
         this.gameObject.transform.position = new Vector3(posx, posy, 0);
     }
 
+    // 캐릭터와 접촉한 블록만 움직이기 함수 - Lerp를 이용한 부드럽게 움직이기 기능을 적용하기 위한 함수
+    public void blockMove(string direction)
+    {
+        // 보고 있는 방향이 다르면 sprite를 각각 다르게 설정
+        if (direction.Equals("up"))
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[1];
+            if (collideBlock[0] != null)
+                collideBlock[0].GetComponent<block>().move(0, 1);
 
+        }
+        else if (direction.Equals("down"))
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[0];
+            if (collideBlock[1] != null)
+                collideBlock[1].GetComponent<block>().move(0, -1);
+        }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+        // left와 right에서 gameObject.transform.localScale이 나오는데, inspector 창에서 직접 수치를 바꾸면서 확인해보자. (스프라이트가 뒤집힘)
+        else if (direction.Equals("left"))
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[2];
+            this.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            if (collideBlock[2] != null)
+                collideBlock[2].GetComponent<block>().move(-1, 0);
+        }
+        else if (direction.Equals("right"))
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[2];
+            this.gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            if (collideBlock[3] != null)
+                collideBlock[3].GetComponent<block>().move(1, 0);
+        }
+    }
+
+    // Lerp를 이용한 이동
+    public void moveWay()
+    {
+        this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, targetPosition, 0.5f);
+    }
+
+    // Lerp는 소수점에서 이동이 멈출 수 있으므로 강제로 int 좌표로 캐릭터 좌표를 바꿔준다
+    public void resetPosition()
+    {
+        this.gameObject.transform.position = targetPosition;
+        posx = (int)targetPosition.x; posy = (int)targetPosition.y;
+    }
+
+    // Enter를 쓰면 접촉했을 때 소수 단위에서 Enter 상태로 들어가버려서 posx, posy가 업데이트가 제대로 안된 상태가 됨. Stay를 이용해 실시간 적용하게 만든다.
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag.Equals("Block"))
         {
+            Debug.Log("current pos : " +  posx + ", " + posy);
             GameObject colBlock = collision.gameObject;
             block GetBlock = colBlock.GetComponent<block>();
             // 블록이 위쪽에 있을 경우
@@ -106,5 +159,7 @@ public class player : MonoBehaviour
             else if (collideBlock[2] == colBlock && posx > GetBlock.posx) collideBlock[2] = null;
         }
     }
+
+  
 
 }
