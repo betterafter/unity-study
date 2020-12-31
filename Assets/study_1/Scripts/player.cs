@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class player : MonoBehaviour
 {
+    GameObject gameManager;
+    int moveX = 5, moveY = 8;
 
     public Sprite[] dirSprites = new Sprite[3];
 
@@ -13,9 +15,12 @@ public class player : MonoBehaviour
     public int posx, posy;
     public bool[] isMove = new bool[4];
     public Vector3 targetPosition;
+    public Vector3 blockPosition;
+    public Vector3 blockTargetPosition;
 
     public void init()
     {
+        gameManager = GameObject.Find("GameManager");
         // 처음 위치 설정
         posx = 0; posy = 0;
         targetPosition = new Vector3(posx, posy);
@@ -82,14 +87,26 @@ public class player : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[1];
             if (collideBlock[0] != null)
-                collideBlock[0].GetComponent<block>().move(0, 1);
+            {
+                gameManager.GetComponent<MapManager>().miniMap[(int)collideBlock[0].transform.position.x + moveX, (int)collideBlock[0].transform.position.y + moveY] = null;
+                blockTargetPosition = new Vector3(targetPosition.x, targetPosition.y + 1);
+                collideBlock[0].GetComponent<block>().move(blockTargetPosition);
+                collideBlock[0].GetComponent<block>().init(blockTargetPosition);
+                gameManager.GetComponent<MapManager>().miniMap[(int)blockTargetPosition.x + moveX, (int)blockTargetPosition.y + moveY] = collideBlock[0];
+            }
 
         }
         else if (direction.Equals("down"))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[0];
             if (collideBlock[1] != null)
-                collideBlock[1].GetComponent<block>().move(0, -1);
+            {
+                gameManager.GetComponent<MapManager>().miniMap[(int)collideBlock[1].transform.position.x + moveX, (int)collideBlock[1].transform.position.y + moveY] = null;
+                blockTargetPosition = new Vector3(targetPosition.x, targetPosition.y - 1);
+                collideBlock[1].GetComponent<block>().move(blockTargetPosition);
+                collideBlock[1].GetComponent<block>().init(blockTargetPosition);
+                gameManager.GetComponent<MapManager>().miniMap[(int)blockTargetPosition.x + moveX, (int)blockTargetPosition.y + moveY] = collideBlock[1];
+            }
         }
 
         // left와 right에서 gameObject.transform.localScale이 나오는데, inspector 창에서 직접 수치를 바꾸면서 확인해보자. (스프라이트가 뒤집힘)
@@ -98,14 +115,26 @@ public class player : MonoBehaviour
             this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[2];
             this.gameObject.transform.localScale = new Vector3(1, 1, 1);
             if (collideBlock[2] != null)
-                collideBlock[2].GetComponent<block>().move(-1, 0);
+            {
+                gameManager.GetComponent<MapManager>().miniMap[(int)collideBlock[2].transform.position.x + moveX, (int)collideBlock[2].transform.position.y + moveY] = null;
+                blockTargetPosition = new Vector3(targetPosition.x - 1, targetPosition.y);
+                collideBlock[2].GetComponent<block>().move(blockTargetPosition);
+                collideBlock[2].GetComponent<block>().init(blockTargetPosition);
+                gameManager.GetComponent<MapManager>().miniMap[(int)blockTargetPosition.x + moveX, (int)blockTargetPosition.y + moveY] = collideBlock[2];
+            }
         }
         else if (direction.Equals("right"))
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = dirSprites[2];
             this.gameObject.transform.localScale = new Vector3(-1, 1, 1);
             if (collideBlock[3] != null)
-                collideBlock[3].GetComponent<block>().move(1, 0);
+            {
+                gameManager.GetComponent<MapManager>().miniMap[(int)collideBlock[3].transform.position.x + moveX, (int)collideBlock[3].transform.position.y + moveY] = null;
+                blockTargetPosition = new Vector3(targetPosition.x + 1, targetPosition.y);
+                collideBlock[3].GetComponent<block>().move(blockTargetPosition);
+                collideBlock[3].GetComponent<block>().init(blockTargetPosition);
+                gameManager.GetComponent<MapManager>().miniMap[(int)blockTargetPosition.x + moveX, (int)blockTargetPosition.y + moveY] = collideBlock[3];
+            }
         }
     }
 
@@ -115,12 +144,34 @@ public class player : MonoBehaviour
         this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, targetPosition, 0.5f);
     }
 
+
+
+
+
+
+
     // Lerp는 소수점에서 이동이 멈출 수 있으므로 강제로 int 좌표로 캐릭터 좌표를 바꿔준다
     public void resetPosition()
     {
+        gameManager.GetComponent<MapManager>().miniMap[posx + moveX, posy + moveY] = null;
+
         this.gameObject.transform.position = targetPosition;
         posx = (int)targetPosition.x; posy = (int)targetPosition.y;
+
+        gameManager.GetComponent<MapManager>().miniMap[posx + moveX, posy + moveY] = this.gameObject;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Enter를 쓰면 접촉했을 때 소수 단위에서 Enter 상태로 들어가버려서 posx, posy가 업데이트가 제대로 안된 상태가 됨. Stay를 이용해 실시간 적용하게 만든다.
     private void OnTriggerStay2D(Collider2D collision)
