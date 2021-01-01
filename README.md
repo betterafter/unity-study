@@ -17,4 +17,12 @@
 예시 영상 : https://drive.google.com/file/d/1Ef0H6YVRkC51Z-ORoNfJ00JJIxOisLgy/view?usp=sharing
 
 
-## study 2
+## study 2 (2021.1.1)
+
+1. Instantiate를 이용한 블록 랜덤 위치 생성
+2. 유니티 기본 ui button을 이용한 캐릭터 이동
+3. 블록 앞에 다른 블록이 있을 때 밀지 못하게 만들기 기능
+4. 가로 모드 -> 세로 모드
+5. 자잘한 버그 수정
+
+예시 영상 : https://drive.google.com/file/d/1MPkclm-jHaXET1ABLPNQdyvNNoRL8GH_/view?usp=sharing
