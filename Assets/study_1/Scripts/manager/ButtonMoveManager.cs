@@ -58,35 +58,38 @@ public class ButtonMoveManager : GameManager
 
     public bool isMoved()
     {
+        int x = GetPlayer.posx + moveX; int y = GetPlayer.posy + moveY;
         if (currentDirection.Equals("left"))
         {
-            if ((mapManager.miniMap[GetPlayer.posx - 2 + moveX, GetPlayer.posy + moveY] == null
-                || mapManager.miniMap[GetPlayer.posx - 1 + moveX, GetPlayer.posy + moveY] == null)) return true;
+            if ((mapManager.miniMap[x - 2, y] == null
+                || mapManager.miniMap[x - 1, y] == null)) return true;
             else return false;
         }
 
         else if (currentDirection.Equals("right"))
         {
-            if ((mapManager.miniMap[GetPlayer.posx + 2 + moveX, GetPlayer.posy + moveY] == null
-                || mapManager.miniMap[GetPlayer.posx + 1 + moveX, GetPlayer.posy + moveY] == null)) return true;
+            if ((mapManager.miniMap[x + 2, y] == null
+                || mapManager.miniMap[x + 1, y] == null)) return true;
             else return false;
         }
 
         else if (currentDirection.Equals("up"))
         {
-            if ((mapManager.miniMap[GetPlayer.posx + moveX, GetPlayer.posy + 2 + moveY] == null
-                || mapManager.miniMap[GetPlayer.posx + moveX, GetPlayer.posy + 1 + moveY] == null)) return true;
+            if ((mapManager.miniMap[x, y + 2] == null
+                || mapManager.miniMap[x, y + 1] == null)) return true;
             else return false;
         }
 
         else if (currentDirection.Equals("down"))
         {
-            if ((mapManager.miniMap[GetPlayer.posx + moveX, GetPlayer.posy - 2 + moveY] == null
-                || mapManager.miniMap[GetPlayer.posx + moveX, GetPlayer.posy - 1 + moveY] == null)) return true;
+            if ((mapManager.miniMap[x, y - 2] == null
+                || mapManager.miniMap[x, y - 1] == null)) return true;
             else return false;
         }
         else return true;
     }
+
+
 
 
     public void onLeftClickDown()

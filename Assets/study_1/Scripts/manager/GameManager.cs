@@ -9,9 +9,13 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public GameObject blockPrefab;
     public GameObject step;
+   
 
     public player GetPlayer;
     public step GetStep;
+
+    public static Text scoreText;
+    public static int score;
 
     public int moveX, moveY;
 
@@ -21,9 +25,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Start()
     {
-
+        moveX = 10; moveY = 16;
         gameManager = this.gameObject;
-        moveX = 5; moveY = 8;
+        score = 0;
+
+        scoreText = GameObject.Find("scoreText").GetComponent<Text>();
 
         player = GameObject.FindWithTag("Player");
         step = GameObject.FindWithTag("Step");

@@ -7,6 +7,8 @@ public class step : MonoBehaviour
     public int posx = 5, posy = 0;
     public Sprite[] steps = new Sprite[2];
 
+    public GameObject gameManager;
+
     public void init()
     {
         posx = 5; posy = 0;
@@ -20,8 +22,13 @@ public class step : MonoBehaviour
         {
             GameObject block = collision.gameObject;
             block GetBlock = block.GetComponent<block>();
-            if(GetBlock.posx == posx && GetBlock.posy == posy)
+            if (GetBlock.posx == posx && GetBlock.posy == posy)
+            {
                 this.gameObject.GetComponent<SpriteRenderer>().sprite = steps[1];
+                Destroy(collision.gameObject);
+                GameManager.score++;
+                GameManager.scoreText.text = GameManager.score.ToString();
+            }
         }
     }
 

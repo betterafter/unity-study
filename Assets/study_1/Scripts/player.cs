@@ -5,7 +5,8 @@ using UnityEngine;
 public class player : MonoBehaviour
 {
     GameObject gameManager;
-    int moveX = 5, moveY = 8;
+
+    public int moveX, moveY;
 
     public Sprite[] dirSprites = new Sprite[3];
 
@@ -21,6 +22,8 @@ public class player : MonoBehaviour
     public void init()
     {
         gameManager = GameObject.Find("GameManager");
+        moveX = gameManager.GetComponent<GameManager>().moveX;
+        moveY = gameManager.GetComponent<GameManager>().moveY;
         // 처음 위치 설정
         posx = 0; posy = 0;
         targetPosition = new Vector3(posx, posy);
